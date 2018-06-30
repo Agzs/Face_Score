@@ -95,6 +95,11 @@ with tf.Session() as sess:
 
     saver.restore(sess,MODEL_PATH)
     coord = tf.train.Coordinator()
-    tf.train.start_queue_runners(coord=coord)
+    # main threads
+    threads = tf.train.start_queue_runners(coord=coord)
     result1=sess.run(result)
     print(result1[0])
+    # stop other threads
+    # solutions refer https://blog.csdn.net/huachao1001/article/details/78083125
+    coord.request_stop()
+    coord.join(threads)
