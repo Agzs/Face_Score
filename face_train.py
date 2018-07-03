@@ -154,8 +154,8 @@ with tf.Session() as sess:
 
     # Start the data queue
     coord = tf.train.Coordinator()
-    tf.train.start_queue_runners(coord=coord)
-
+    threads = tf.train.start_queue_runners(coord=coord)
+	
     # Training cycle
     for step in range(1, num_steps+1):
 
@@ -171,5 +171,10 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
+    # stop other threads
+    # solutions refer https://blog.csdn.net/huachao1001/article/details/78083125
+    coord.request_stop()
+    coord.join(threads)	
+	
     # Save your model
     saver.save(sess, './model')
